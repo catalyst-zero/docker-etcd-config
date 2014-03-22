@@ -1,9 +1,5 @@
 #!/bin/bash
 
-wait_for_container()
-{
-}
-
 MACH=$1
 PORT=$2
 SERV=$3
