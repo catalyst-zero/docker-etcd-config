@@ -11,7 +11,7 @@ KV=$@
 ## Wait for the container to start up
 while [ "$(/usr/bin/docker port $CONTAINER $PORT)" = "" ]
 do
-    echo "waiting for container $1 ..."
+    echo "waiting for container $CONTAINER ..."
     sleep 2
 done
 
