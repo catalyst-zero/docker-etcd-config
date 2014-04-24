@@ -1,7 +1,9 @@
 docker-etcd-config
 ==================
 
-This is a simple script one can run along his service-container. It automatically
+This is a simple script one can run along his service-container, which publishes the host/port information to ETCD.
+
+Original work done by [polvi](https://github.com/polvi/docker-reg).
 
 ## Building
 
