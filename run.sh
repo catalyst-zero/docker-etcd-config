@@ -1,24 +1,25 @@
 #!/bin/bash
 
-MACH=$1
+CONTAINER=$1
 PORT=$2
-SERV=$3
+SERVICE=$3
 shift
 shift
 shift
 KV=$@
 
-# wait for the container to start up
-while [ "$(/usr/bin/docker port $MACH $PORT)" = "" ]
+## Wait for the container to start up
+while [ "$(/usr/bin/docker port $CONTAINER $PORT)" = "" ]
 do
-    echo "waiting for container $1 ..."
+    echo "waiting for container $CONTAINER ..."
     sleep 2
 done
 
-DOCKER_PORTS=$(/usr/bin/docker port $MACH $PORT)
+DOCKER_PORTS=$(/usr/bin/docker port $CONTAINER $PORT)
 KV="host=$(echo $DOCKER_PORTS | awk -F':' '{print $1}') $KV"
 KV="port=$(echo $DOCKER_PORTS | awk -F':' '{print $2}') $KV"
 
+## Transform KV into a JSON struct.
 JSON=
 i=0
 for kv in $KV; do
@@ -39,9 +40,11 @@ done
 JSON="{$JSON }"
 echo $JSON
 
+
+## Save the JSON to ETCD
 CTL="etcdctl -C http://${ETCD_PORT_10000_TCP_ADDR}:${ETCD_PORT_10000_TCP_PORT}"
 
-KEY="/services/${SERV}/${MACH}"
+KEY="/services/${SERVICE}/${CONTAINER}"
 trap "$CTL rm $KEY; exit" SIGHUP SIGINT SIGTERM
 
 while [ 1 ]; do
